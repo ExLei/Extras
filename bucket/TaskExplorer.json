@@ -1,0 +1,46 @@
+{
+    "version": "1.8.0",
+    "description": "An advanced Task Manager with deep process analysis and kernel driver monitoring.",
+    "homepage": "https://github.com/DavidXanatos/TaskExplorer",
+    "license": {
+        "identifier": "GPL-3.0-only",
+        "url": "https://github.com/DavidXanatos/TaskExplorer/blob/master/LICENSE"
+    },
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/DavidXanatos/TaskExplorer/releases/download/v1.8.0/TaskExplorer-v1.8.0.exe",
+            "hash": "e40af0d5cfd43091e626eda631cbc53d4804db129b602180d05d47be137cf744"
+        }
+    },
+    "pre_install": [
+        "if (!(Test-Path \"$dir\\TaskExplorer.ini\")) { New-Item -ItemType File \"$dir\\TaskExplorer.ini\" -Force | Out-Null }"
+    ],
+    "post_install": [
+        "Remove-Item \"$dir\\*.pdb\", \"$dir\\*.sig\", \"$dir\\install_script.iss\" -Force -ErrorAction SilentlyContinue"
+    ],
+    "installer": {
+        "script": "Expand-InnoArchive \"$dir\\$fname\" -Removal"
+    },
+    "pre_uninstall": [
+        "Stop-Process -Name 'TaskExplorer' -Force -ErrorAction SilentlyContinue",
+        "Stop-Process -Name 'TaskHelper' -Force -ErrorAction SilentlyContinue",
+        "Start-Sleep -Milliseconds 1500"
+    ],
+    "shortcuts": [
+        [
+            "TaskExplorer.exe",
+            "Task Explorer"
+        ]
+    ],
+    "persist": "TaskExplorer.ini",
+    "checkver": {
+        "github": "https://github.com/DavidXanatos/TaskExplorer"
+    },
+    "autoupdate": {
+        "architecture": {
+            "64bit": {
+                "url": "https://github.com/DavidXanatos/TaskExplorer/releases/download/v$version/TaskExplorer-v$version.exe"
+            }
+        }
+    }
+}
